@@ -19,30 +19,41 @@ function App() {
         };
         }, []);
 
-    const handleDrop = (acceptedFiles) => {
-        if (acceptedFiles && acceptedFiles.length > 0) {
-            // Создаем URL для выбранного файла
-            const file = acceptedFiles[0];
-            const fileUrl = URL.createObjectURL(file);
+    useEffect(() => {
+        const recognizeText = async () => {
+            if (croppedImage) {
+                try {
+                    const detectedText = await helperFunction(croppedImage);
+                    setText(detectedText.text);
+                } catch (error) {
+                    console.error("Ошибка при анализе изображения:", error);
+                }
+            }
+        };
     
-            // Обновляем состояние компонента для отображения изображения
-            setImage(fileUrl);
-        }
-    };
+        recognizeText();
+        }, [croppedImage]);
 
-    const handleCrop = () => {
+    const handleAnalyze = async () => {
         const cropper = cropperRef.current;
         if (cropper) {
             const canvas = cropper.getCanvas();
             if (canvas) {
-                // Получаем Data URL изображения
                 const dataUrl = canvas.toDataURL();
-                // Преобразуем Data URL в чистую строку base64
                 const base64Image = dataUrl.split(',')[1];
-                setCroppedImage(base64Image);
+                setCroppedImage(base64Image); 
             }
         }
+    }; 
+        
+    const handleDrop = (acceptedFiles) => {
+        if (acceptedFiles && acceptedFiles.length > 0) {
+            const file = acceptedFiles[0];
+            const fileUrl = URL.createObjectURL(file);
+            setImage(fileUrl);
+        }
     };
+
     
     const handlePaste = (event) => {
         if (event.clipboardData && event.clipboardData.items) {
@@ -54,17 +65,6 @@ function App() {
                     setImage(fileUrl);
                     break;
                 }
-            }
-        }
-    };
-    
-    const handleAnalyze = async () => {
-        if (croppedImage) {
-            try {
-                const detectedText = await helperFunction(croppedImage);
-                setText(detectedText.text);
-            } catch (error) {
-                console.error("Ошибка при анализе изображения:", error);
             }
         }
     };
@@ -112,15 +112,6 @@ function App() {
         <div className="flex justify-between my-2">
             <div className="flex space-x-2">
                 {image && (
-                    <button 
-                        onClick={handleCrop}
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    >
-                        Cut image
-                    </button>
-                )}
-
-                {croppedImage && (
                     <button 
                         onClick={handleAnalyze}
                         className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
