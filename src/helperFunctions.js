@@ -1,5 +1,4 @@
-const API_KEY = 'AIzaSyDr3r4O8Bh3-OVeujiXjbloATlN6X7tOSY';
-const API_URL = `https://vision.googleapis.com/v1/images:annotate?key=${API_KEY}`;
+const API_URL = `https://vision.googleapis.com/v1/images:annotate?key=${process.env.NEXT_PUBLIC_VISION_API}`;
 
 function generateBody(image) {
   const body = {

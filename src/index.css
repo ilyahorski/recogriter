@@ -2,13 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-#root {
-  width: 1200px;
-  height: 1000px;
-  margin: 0 auto;
-  overflow: auto; 
-}
-
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
